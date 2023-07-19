@@ -492,18 +492,6 @@ static CDVWKInAppBrowser* instance = nil;
     return NO;
 }
 
-- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
- completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
-    NSBundle *bundle = [NSBundle mainBundle];
-    NSData *rootCertData = [NSData dataWithContentsOfFile:[bundle pathForResource:@"russian_trusted_root_ca" ofType:@"der"]];
-    SecCertificateRef certificate = SecCertificateCreateWithData(NULL, (CFDataRef) rootCertData);
-    SecTrustRef trust;
-    SecTrustCreateWithCertificates(certificate, nil, &trust);
-    NSURLCredential *credential = [[NSURLCredential alloc] initWithTrust:trust];
-
-    completionHandler (NSURLSessionAuthChallengeUseCredential, credential);
-}
-
 /**
  * The message handler bridge provided for the InAppBrowser is capable of executing any oustanding callback belonging
  * to the InAppBrowser plugin. Care has been taken that other callbacks cannot be triggered, and that no
@@ -925,6 +913,18 @@ BOOL isExiting = FALSE;
     [self.view addSubview:self.toolbar];
     [self.view addSubview:self.addressLabel];
     [self.view addSubview:self.spinner];
+}
+
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+ completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSData *rootCertData = [NSData dataWithContentsOfFile:[bundle pathForResource:@"russian_trusted_root_ca" ofType:@"der"]];
+    SecCertificateRef certificate = SecCertificateCreateWithData(NULL, (CFDataRef) rootCertData);
+    SecTrustRef trust;
+    SecTrustCreateWithCertificates(certificate, nil, &trust);
+    NSURLCredential *credential = [[NSURLCredential alloc] initWithTrust:trust];
+
+    completionHandler (NSURLSessionAuthChallengeUseCredential, credential);
 }
 
 - (id)settingForKey:(NSString*)key
