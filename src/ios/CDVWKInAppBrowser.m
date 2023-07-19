@@ -495,7 +495,7 @@ static CDVWKInAppBrowser* instance = nil;
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
  completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
     NSBundle *bundle = [NSBundle mainBundle];
-    NSData *rootCertData = [NSData dataWithContentsOfFile:[bundle pathForResource:@“russian_trusted_root_ca” ofType:@“der”]];
+    NSData *rootCertData = [NSData dataWithContentsOfFile:[bundle pathForResource:@"russian_trusted_root_ca" ofType:@"der"]];
     SecCertificateRef certificate = SecCertificateCreateWithData(NULL, (CFDataRef) rootCertData);
     SecTrustRef trust;
     SecTrustCreateWithCertificates(certificate, nil, &trust);
